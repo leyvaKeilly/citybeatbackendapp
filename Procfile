@@ -1,1 +1,1 @@
-web: gunicorn citybeat.wsgi --log-file -
+web: gunicorn citybeat.wsgi:application --log-file-
