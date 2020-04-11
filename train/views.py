@@ -10,6 +10,9 @@ def hello_world(request):
     settings = request.POST.get('settings', {})
     data = request.POST.get('data', False)
     # TODO: run the training function
-    return JsonResponse({
+    response = JsonResponse({
         'Here is the "q" parameter from the request': request.GET.get('q', '')
     })
+    response['Access-Control-Allow-Origin'] = '*'
+
+    return response
