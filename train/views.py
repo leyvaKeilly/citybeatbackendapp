@@ -13,10 +13,3 @@ def hello_world(request):
     return JsonResponse({
         'Here is the "q" parameter from the request': request.GET.get('q', '')
     })
-
-
-# Sends the database data to the client
-def hello_world2(request):
-    # TODO: connect to the PostgreSQL database
-    # TODO: fetch the data from postgres
-    # TODO: return the data as JSON to the client
