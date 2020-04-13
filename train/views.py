@@ -2,6 +2,12 @@ from django.shortcuts import render
 from django.http import JsonResponse
 import requests
 
+# for database connection
+#import psycopg2
+#import os
+#DATABASE_URL = os.environ['DATABASE_URL']
+#conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+
 # Create your views here.
 
 
