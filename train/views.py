@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+import requests
 
 # Create your views here.
 
@@ -16,3 +17,8 @@ def hello_world(request):
     response['Access-Control-Allow-Origin'] = '*'
 
     return response
+
+# def hello_world(request):
+#    r = requests.get('http://httpbin.org/status/418')
+#    print(r.text)
+#    return HttpResponse('<pre>' + r.text + '</pre>')
