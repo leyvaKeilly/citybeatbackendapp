@@ -9,8 +9,6 @@ import requests
 #conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 # Create your views here.
-
-
 # Trains the model on some data
 def hello_world(request):
     userid = request.POST.get('userid', '0')
