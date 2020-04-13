@@ -28,7 +28,9 @@ SECRET_KEY = 'g6fj++*%hy3f2&t0ab)*un5e6r3h@4rm+-g6!!qnxf=e%dvt@z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['citybeatapp.herokuapp.com',
+                 'localhost:3000',
+                 ]
 
 
 # Application definition
