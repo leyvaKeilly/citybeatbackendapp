@@ -10,13 +10,17 @@ import requests
 
 # Create your views here.
 # Trains the model on some data
+
+
 def hello_world(request):
-    userid = request.POST.get('userid', '0')
-    settings = request.POST.get('settings', {})
-    data = request.POST.get('data', False)
+    userid = request.POST.get('userid')
+    settings = request.POST.get('settings')
+    data = request.POST.get('data')
     # TODO: run the training function
     response = JsonResponse({
-        'Here is the "q" parameter from the request': request.GET.get('q', '')
+        'Here is the "q" parameter from the request': userid,
+        'settings': settings,
+        'data': data
     })
     response['Access-Control-Allow-Origin'] = '*'
 
