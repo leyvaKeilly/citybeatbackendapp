@@ -15,13 +15,11 @@ import requests
 @csrf_exempt
 def hello_world(request):
     userid = request.POST.get('userid')
-    settings = request.get('settings')
-    data = request.get('data')
+    settings = request.POST.get('settings')
+    data = request.POST.get('data')
     # TODO: run the training function
     response = JsonResponse({
-        'Here is the "q" parameter from the request': userid,
-        'settings': settings,
-        'data': data
+        'Here is the "q" parameter from the request': request.GET.get('q')
     })
     response['Access-Control-Allow-Origin'] = '*'
     # response['Access-Control-Allow-Credentials'] = 'True'
