@@ -1,7 +1,8 @@
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 import requests
+import json
 
 # for database connection
 #import psycopg2
@@ -14,13 +15,22 @@ import requests
 
 @csrf_exempt
 def hello_world(request):
-    userid = request.POST.get('userid')
-    settings = request.POST.get('settings')
-    data = request.POST.get('data')
-
+    try:
+        q = json.loads(request.body.decode('utf-8'))
+        userid = q['userid']
+        settings = q['settings']
+        data = q['data']
+    except Exception as e:
+        return HttpResponseBadRequest(
+            json.dumps({
+                'error': 'Invalid request: {0}'.format(str(e))
+            }),
+            content_type="application/json"
+        )
+    
     # TODO: run the training function
     response = JsonResponse({
-        'Here is the "q" parameter from the request': userid
+        'Here is the "q" parameter from the request': q
     })
     response['Access-Control-Allow-Origin'] = '*'
     # response['Access-Control-Allow-Credentials'] = 'True'
