@@ -3,7 +3,7 @@ from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 import requests
 import json
-import ai_engine as ai
+from .ai_engine import aimodel
 
 # for database connection
 #import psycopg2
@@ -25,7 +25,7 @@ def hello_world(request):
         data = q['data']
 
         print(userid)
-        ai.aimodel(userid, settings, featureSettings)
+        dataBack = aimodel(userid, settings, featureSettings, data)
 
     except Exception as e:
         return HttpResponseBadRequest(
@@ -37,8 +37,7 @@ def hello_world(request):
 
     # TODO: run the training function
     response = JsonResponse({
-        'data': data,
-        'userid': userid,
+        'data': dataBack
     })
     response['Access-Control-Allow-Origin'] = '*'
     # response['Access-Control-Allow-Credentials'] = 'True'

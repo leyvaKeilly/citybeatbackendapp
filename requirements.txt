@@ -5,3 +5,7 @@ requests
 psycopg2-binary
 dj-database-url
 django-cors-headers
+pandas
+sklearn
+xgboost
+sqlalchemy
