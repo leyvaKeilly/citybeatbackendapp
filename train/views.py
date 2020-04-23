@@ -24,8 +24,9 @@ def hello_world(request):
         settings = q['settings']
         data = q['data']
 
-        print(userid)
         dataBack = aimodel(userid, settings, featureSettings, data)
+        print("data")
+        print(dataBack)
 
     except Exception as e:
         return HttpResponseBadRequest(
@@ -40,12 +41,5 @@ def hello_world(request):
         'data': dataBack
     })
     response['Access-Control-Allow-Origin'] = '*'
-    # response['Access-Control-Allow-Credentials'] = 'True'
-    # response["Access-Control-Allow-Methods"] = 'GET,HEAD,OPTIONS,POST,PUT'
-    # response["Access-Control-Allow-Headers"] = "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers"
-    return response
 
-# def hello_world(request):
-#    r = requests.get('http://httpbin.org/status/418')
-#    print(r.text)
-#    return HttpResponse('<pre>' + r.text + '</pre>')
+    return response
