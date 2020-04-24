@@ -445,13 +445,6 @@ def aimodel(uid, settings, featureSettings, data):
 
         for user in userIDStrings:
 
-            user_time_watched_ratio = None
-            categories = None
-            vid_num_views = None
-            vid_num_selected = None
-            vid_avg_time_watched = None
-            vid_avg_interaction_span = None
-
             sql_user_time_watched = """select amount_of_time_watched, videolibrary.length, userinteractions.vid 
             from userinteractions, videolibrary, userinfo 
             where userinteractions.vid = videolibrary.vid and userinfo.uid = userinteractions.uid
@@ -505,10 +498,6 @@ def aimodel(uid, settings, featureSettings, data):
             vid_view_info = vid_view_info.fillna(value=0)
             vid_view_info['vid_user_selected_watch_ratio'] = np.where(
                 vid_view_info['num_distinct_views'] > 0, vid_view_info['num_selected']/vid_view_info['num_distinct_views'], 0)
-
-            # table of the average amount of time in seconds that the video has been watched
-            vid_avg_time_watched['vid_avg_time_watched_ratio'] = vid_avg_time_watched['vid_avg_time_watched'] / \
-                vid_avg_time_watched['length']
 
             # vid_avg_interaction_span['vid_avg_interaction_span_days'] = vid_avg_interaction_span['vid_avg_interaction_span_days'].apply(
             #    stripdays)
