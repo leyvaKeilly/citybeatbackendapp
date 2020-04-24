@@ -5,27 +5,19 @@ import requests
 import json
 from .ai_engine import aimodel
 
-# for database connection
-#import psycopg2
-#import os
-#DATABASE_URL = os.environ['DATABASE_URL']
-#conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-
-# Create your views here.
-# Trains the model on some data
-
 
 @csrf_exempt
 def hello_world(request):
     try:
+        # getting data from request
         q = json.loads(request.body.decode('utf-8'))
         userid = q['user']
         featureSettings = q['featureSettings']
         settings = q['settings']
         data = q['data']
 
+        # running ai algorithm
         dataBack = aimodel(userid, settings, featureSettings, data)
-        print("data")
         print(dataBack)
 
     except Exception as e:
@@ -36,7 +28,7 @@ def hello_world(request):
             content_type="application/json"
         )
 
-    # TODO: run the training function
+    # return response to frontend
     response = JsonResponse({
         'data': dataBack
     })

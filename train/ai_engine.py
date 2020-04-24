@@ -410,6 +410,7 @@ def aimodel(uid, settings, featureSettings, data):
         host = 'drona.db.elephantsql.com'
         port = '5432'
         database = 'dxxgpeye'
+
         # elephantSQL connection
         #connection = psycopg2.connect("dbname='dxxgpeye' user='dxxgpeye' host='drona.db.elephantsql.com' password='LuMS6WYy5EDkUs85hXToB9GtWGF78NSM'")
 
