@@ -412,7 +412,7 @@ def aimodel(uid, settings, featureSettings, data):
         port = '5432'
         database = 'dxxgpeye'
         url = os.environ['DATABASE_URL']
-        conn = psycopg2.connect(url, sslmode='require')
+        #conn = psycopg2.connect(url, sslmode='require')
 
         # elephantSQL connection
         #connection = psycopg2.connect("dbname='dxxgpeye' user='dxxgpeye' host='drona.db.elephantsql.com' password='LuMS6WYy5EDkUs85hXToB9GtWGF78NSM'")
@@ -421,7 +421,7 @@ def aimodel(uid, settings, featureSettings, data):
         #                        .format(user=dbusername,
         #                                pw=password,
         #                                db=database))
-        engine = create_engine(conn)
+        engine = create_engine(url)
 
         userIDs = pd.read_sql_query(sql_uids, con=engine)
 
@@ -648,7 +648,7 @@ def aimodel(uid, settings, featureSettings, data):
             database = 'dxxgpeye'
 
             url = os.environ['DATABASE_URL']
-            conn = psycopg2.connect(url, sslmode='require')
+            #conn = psycopg2.connect(url, sslmode='require')
 
             # elephantSQL connection
             #connection = psycopg2.connect("dbname='dxxgpeye' user='dxxgpeye' host='drona.db.elephantsql.com' password='LuMS6WYy5EDkUs85hXToB9GtWGF78NSM'")
@@ -657,7 +657,7 @@ def aimodel(uid, settings, featureSettings, data):
             #                        .format(user=dbusername,
             #                                pw=password,
             #                                db=database))
-            engine = create_engine(conn)
+            engine = create_engine(url)
             print("after conn")
             sql_user_time_watched = """select amount_of_time_watched, videolibrary.length, userinteractions.vid 
             from userinteractions, videolibrary, userinfo 
