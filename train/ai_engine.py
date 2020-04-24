@@ -138,12 +138,13 @@ def aimodel(uid, settings, featureSettings, data):
                 vids_prob = model.predict_proba(
                     vidfeatures.drop(['vid', 'title'], axis=1))[:, 1]
                 outputDict['data'] = sorted(
-                    zip(vids_prob, vids, titles), reverse=True)
+                    zip(vids_prob.tolist(), vids.tolist(), titles.tolist()), reverse=True)
                 return(outputDict)
             else:
                 vids_prob = model.predict_proba(
                     vidfeatures.drop(['vid', 'title'], axis=1))[:, 1]
-                outputDict['data'] = sorted(zip(vids_prob, vids), reverse=True)
+                outputDict['data'] = sorted(
+                    zip(vids_prob.tolist(), vids.tolist()), reverse=True)
                 return(outputDict)
 
     # likely not the algorithm to use due to binary nature of initial question
@@ -172,12 +173,13 @@ def aimodel(uid, settings, featureSettings, data):
                 vids_prob = model.predict_proba(
                     vidfeatures.drop(['vid', 'title'], axis=1))[:, 1]
                 outputDict['data'] = sorted(
-                    zip(vids_prob, vids, titles), reverse=True)
+                    zip(vids_prob.tolist(), vids.tolist(), titles.tolist()), reverse=True)
                 return(outputDict)
             else:
                 vids_prob = model.predict_proba(
                     vidfeatures.drop(['vid', 'title'], axis=1))[:, 1]
-                outputDict['data'] = sorted(zip(vids_prob, vids), reverse=True)
+                outputDict['data'] = sorted(
+                    zip(vids_prob.tolist(), vids.tolist()), reverse=True)
                 return(outputDict)
 
     def runMLP(ttuserint, vidfeatures, settings=settings):
@@ -202,12 +204,13 @@ def aimodel(uid, settings, featureSettings, data):
                 vids_prob = model.predict_proba(
                     vidfeatures.drop(['vid', 'title'], axis=1))[:, 1]
                 outputDict['data'] = sorted(
-                    zip(vids_prob, vids, titles), reverse=True)
+                    zip(vids_prob.tolist(), vids.tolist(), titles.tolist()), reverse=True)
                 return(outputDict)
             else:
                 vids_prob = model.predict_proba(
                     vidfeatures.drop(['vid', 'title'], axis=1))[:, 1]
-                outputDict['data'] = sorted(zip(vids_prob, vids), reverse=True)
+                outputDict['data'] = sorted(
+                    zip(vids_prob.tolist(), vids.tolist()), reverse=True)
                 return(outputDict)
 
     def runXGBoost(ttuserint, vidfeatures, settings=settings):
@@ -246,12 +249,13 @@ def aimodel(uid, settings, featureSettings, data):
                 vids_prob = model.predict_proba(
                     vidfeatures.drop(['vid', 'title'], axis=1).values)[:, 1]
                 outputDict['data'] = sorted(
-                    zip(vids_prob, vids, titles), reverse=True)
+                    zip(vids_prob.tolist(), vids.tolist(), titles.tolist()), reverse=True)
                 return(outputDict)
             else:
                 vids_prob = model.predict_proba(
                     vidfeatures.drop(['vid', 'title'], axis=1).values)[:, 1]
-                outputDict['data'] = sorted(zip(vids_prob, vids), reverse=True)
+                outputDict['data'] = sorted(
+                    zip(vids_prob.tolist(), vids.tolist()), reverse=True)
                 return(outputDict)
 
     # returns the F1 score and results from confusion matrix.
@@ -405,7 +409,7 @@ def aimodel(uid, settings, featureSettings, data):
                 fn = round(final_conf_matrix[1][0]/sample_size, 2)
                 return({'f1score': f1score, 'tp': tp, 'fp': fp, 'tn': tn, 'fn': fn})
 
-    if settings['nUserF1Scores'] and data is None:
+    if settings['nUserF1Scores'] and len(data) == 0:
         output = {'f1score': 0, 'tp': 0, 'fp': 0,
                   'tn': 0, 'fn': 0, 'nusers': 0, 'data': []}
         userIDs = None
@@ -633,7 +637,6 @@ def aimodel(uid, settings, featureSettings, data):
         vid_avg_interaction_span = None
 
         if len(data) > 0:
-            print("here")
             userIDs = pd.DataFrame(data[0], columns=['uid'])
             user_time_watched_ratio = pd.DataFrame.from_dict(data[6])
             categories = pd.DataFrame.from_dict(data[1])
@@ -659,12 +662,10 @@ def aimodel(uid, settings, featureSettings, data):
             #                                pw=password,
             #                                db=database))
             engine = create_engine(url)
-            print("after conn")
             sql_user_time_watched = """select amount_of_time_watched, videolibrary.length, userinteractions.vid 
             from userinteractions, videolibrary, userinfo 
             where userinteractions.vid = videolibrary.vid and userinfo.uid = userinteractions.uid
             and userinfo.uid = '{uid}'""".format(uid=uid)
-            print(pd.read_sql_query(sql_num_users, con=engine))
             userIDs = pd.read_sql_query(sql_num_users, con=engine)
             user_time_watched_ratio = pd.read_sql_query(
                 sql_user_time_watched, con=engine)
@@ -678,12 +679,12 @@ def aimodel(uid, settings, featureSettings, data):
                 sql_vid_avg_interaction_span, con=engine)
             vid_avg_interaction_span['vid_avg_interaction_span_days'] = vid_avg_interaction_span['vid_avg_interaction_span_days'].apply(
                 stripdays)
-        print("before num user")
+
         # integer value of number of users. used in later calculations
         num_users = len(userIDs)
         user_time_watched_ratio['if_watched'] = np.where(
             user_time_watched_ratio['amount_of_time_watched']/user_time_watched_ratio['length'] > .75, 1, 0)
-        print("user time")
+
         # used for multilogistic regression
         if settings['modelType'] == 'multilogreg':
             user_time_watched_ratio.index.name = 'index'
@@ -691,7 +692,6 @@ def aimodel(uid, settings, featureSettings, data):
             user_time_watched_ratio['if_watched_multi'] = user_time_watched_ratio['index'].apply(
                 partitionClasses)
             user_time_watched_ratio.drop('index', axis=1)
-        print("settings")
         # table of the categories for all videos in the videolibrary
         categories['primary_category'] = categories['primary_category'].apply(
             rstrip)
@@ -750,16 +750,13 @@ def aimodel(uid, settings, featureSettings, data):
         # also contains the dependent variable, time_watched
         ttuserint = pd.merge(vidfeatures, user_time_watched_ratio, how='inner', on='vid').drop(
             ['amount_of_time_watched', 'length'], axis=1)
-        print("before keys")
         # this is the subset of the vidfeatures table of the videos that we want to run through the trained model
         # to get our list of probabilities that the selected user will watch each video
         keys = list(ttuserint.vid.values)
         # final table. use this to push through the already trained model
         vidfeatures = vidfeatures[~vidfeatures.vid.isin(keys)]
-        print("vidfeatures")
         # final table. use this to test/train the model
         ttuserint = ttuserint.drop(['vid', 'title'], axis=1)
-        print("last if stat")
         if settings['modelType'] == 'logreg':
             return(runLogisticRegression(ttuserint, vidfeatures))
         elif settings['modelType'] == 'multilogreg':
