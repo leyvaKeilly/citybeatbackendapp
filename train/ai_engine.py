@@ -41,7 +41,7 @@ def aimodel(uid, settings, featureSettings, data):
     where userinteractions.vid = videolibrary.vid
     group by videolibrary.vid"""
 
-    sql_vid_avg_interaction_span = """select avg(date_watched - release_date) as vid_avg_interaction_span_days, userinteractions.vid 
+    sql_vid_avg_interaction_span = """select avg(userinteractions.date_watched - videolibrary.release_date) as vid_avg_interaction_span_days, userinteractions.vid 
     from userinteractions, videolibrary, userinfo 
     where userinteractions.vid = videolibrary.vid
     group by userinteractions.vid"""
