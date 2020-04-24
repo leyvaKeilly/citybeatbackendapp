@@ -11,6 +11,7 @@ import xgboost as xgb
 from sklearn.model_selection import KFold
 from sklearn import metrics
 import json
+import os
 
 
 def aimodel(uid, settings, featureSettings, data):
@@ -410,14 +411,17 @@ def aimodel(uid, settings, featureSettings, data):
         host = 'drona.db.elephantsql.com'
         port = '5432'
         database = 'dxxgpeye'
+        url = os.environ['DATABASE_URL']
+        conn = psycopg2.connect(url, sslmode='require')
 
         # elephantSQL connection
         #connection = psycopg2.connect("dbname='dxxgpeye' user='dxxgpeye' host='drona.db.elephantsql.com' password='LuMS6WYy5EDkUs85hXToB9GtWGF78NSM'")
 
-        engine = create_engine("postgresql+psycopg2://{user}:{pw}@localhost/{db}"
-                               .format(user=dbusername,
-                                       pw=password,
-                                       db=database))
+        # engine = create_engine("postgresql+psycopg2://{user}:{pw}@localhost/{db}"
+        #                        .format(user=dbusername,
+        #                                pw=password,
+        #                                db=database))
+        engine = create_engine(conn)
 
         userIDs = pd.read_sql_query(sql_uids, con=engine)
 
@@ -643,10 +647,17 @@ def aimodel(uid, settings, featureSettings, data):
             port = '5432'
             database = 'dxxgpeye'
 
-            engine = create_engine("postgresql+psycopg2://{user}:{pw}@localhost/{db}"
-                                   .format(user=dbusername,
-                                           pw=password,
-                                           db=database))
+            url = os.environ['DATABASE_URL']
+            conn = psycopg2.connect(url, sslmode='require')
+
+            # elephantSQL connection
+            #connection = psycopg2.connect("dbname='dxxgpeye' user='dxxgpeye' host='drona.db.elephantsql.com' password='LuMS6WYy5EDkUs85hXToB9GtWGF78NSM'")
+
+            # engine = create_engine("postgresql+psycopg2://{user}:{pw}@localhost/{db}"
+            #                        .format(user=dbusername,
+            #                                pw=password,
+            #                                db=database))
+            engine = create_engine(conn)
             print("after conn")
             sql_user_time_watched = """select amount_of_time_watched, videolibrary.length, userinteractions.vid 
             from userinteractions, videolibrary, userinfo 
