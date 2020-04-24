@@ -19,7 +19,7 @@ def aimodel(uid, settings, featureSettings, data):
 
     sql_uids = """select uid from userinfo"""
 
-    sql_categories = """select vid,title,primary_category,sub_category,sub_sub_category
+    sql_categories = """select vid,title,primary_category,sub_category,sub_sub_category, length
     from videolibrary"""
 
     sql_vid_num_views = """select videolibrary.vid, count(distinct userinteractions.uid) as num_distinct_views
@@ -481,7 +481,6 @@ def aimodel(uid, settings, featureSettings, data):
                 user_time_watched_ratio.drop('index', axis=1)
 
             # table of the categories for all videos in the videolibrary
-            categories = pd.DataFrame.from_dict(data[1])
             categories['primary_category'] = categories['primary_category'].apply(
                 rstrip)
             categories['sub_category'] = categories['sub_category'].apply(
@@ -491,11 +490,9 @@ def aimodel(uid, settings, featureSettings, data):
 
             # table of videos with the ratio of number of unique views to total number of users
 
-            vid_num_views = pd.DataFrame.from_dict(data[2])
             vid_num_views['vid_user_watched_ratio'] = vid_num_views['num_distinct_views']/num_users
 
             # table of videos with the count of how many times it has been selected, used later for other table calculations
-            vid_num_selected = pd.DataFrame.from_dict(data[3])
             # table of videos with the ratio of number of times video has been selected to number of unique views,
             # merged with the vid_num_views table from above
             vid_view_info = pd.merge(
@@ -506,12 +503,9 @@ def aimodel(uid, settings, featureSettings, data):
                 vid_view_info['num_distinct_views'] > 0, vid_view_info['num_selected']/vid_view_info['num_distinct_views'], 0)
 
             # table of the average amount of time in seconds that the video has been watched
-            vid_avg_time_watched = pd.DataFrame.from_dict(data[4])
             vid_avg_time_watched['vid_avg_time_watched_ratio'] = vid_avg_time_watched['vid_avg_time_watched'] / \
                 vid_avg_time_watched['length']
 
-            # table of the average length of time that has passed since users watched the video and since the video was released
-            vid_avg_interaction_span = pd.DataFrame.from_dict(data[5])
             # vid_avg_interaction_span['vid_avg_interaction_span_days'] = vid_avg_interaction_span['vid_avg_interaction_span_days'].apply(
             #    stripdays)
 
@@ -521,6 +515,9 @@ def aimodel(uid, settings, featureSettings, data):
                 categories, vid_view_info, how='outer', on='vid')
             vidfeatures = pd.merge(
                 vidfeatures, vid_avg_time_watched, how='outer', on='vid')
+            # table of the average amount of time in seconds that the video has been watched
+            vidfeatures['vid_avg_time_watched_ratio'] = vidfeatures['vid_avg_time_watched'] / \
+                vidfeatures['length']
             vidfeatures = pd.merge(
                 vidfeatures, vid_avg_interaction_span, how='outer', on='vid')
             vidfeatures = vidfeatures.fillna(value=0)
@@ -713,16 +710,21 @@ def aimodel(uid, settings, featureSettings, data):
         vid_view_info['vid_user_selected_watch_ratio'] = np.where(
             vid_view_info['num_distinct_views'] > 0, vid_view_info['num_selected']/vid_view_info['num_distinct_views'], 0)
 
-        # table of the average amount of time in seconds that the video has been watched
-        vid_avg_time_watched['vid_avg_time_watched_ratio'] = vid_avg_time_watched['vid_avg_time_watched'] / \
-            vid_avg_time_watched['length']
-
         # merges the tables together by vid to form one large table, vidfeatures
         # vidfeatures is a table of the entire videolibrary with the previously calculated columns
         vidfeatures = pd.merge(
             categories, vid_view_info, how='outer', on='vid')
-        vidfeatures = pd.merge(
-            vidfeatures, vid_avg_time_watched, how='outer', on='vid')
+        if len(data) > 0:
+            # table of the average amount of time in seconds that the video has been watched
+            vid_avg_time_watched['vid_avg_time_watched_ratio'] = vid_avg_time_watched['vid_avg_time_watched'] / \
+                vid_avg_time_watched['length']
+            vidfeatures = pd.merge(
+                vidfeatures, vid_avg_time_watched, how='outer', on='vid')
+        else:
+            vidfeatures = pd.merge(
+                vidfeatures, vid_avg_time_watched, how='outer', on='vid')
+            vidfeatures['vid_avg_time_watched_ratio'] = vidfeatures['vid_avg_time_watched'] / \
+                vidfeatures['length']
         vidfeatures = pd.merge(
             vidfeatures, vid_avg_interaction_span, how='outer', on='vid')
         vidfeatures = vidfeatures.fillna(value=0)
