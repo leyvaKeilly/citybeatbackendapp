@@ -36,12 +36,16 @@ def aimodel(uid, settings, featureSettings, data):
     and userinteractions.vid_selected = true
     group by videolibrary.vid"""
 
-    sql_vid_avg_time_watched = """select videolibrary.vid,videolibrary.length, avg(userinteractions.amount_of_time_watched) as vid_avg_time_watched
+    # sql_vid_avg_time_watched = """select videolibrary.vid,videolibrary.length, avg(userinteractions.amount_of_time_watched) as vid_avg_time_watched
+    # from userinteractions, videolibrary
+    # where userinteractions.vid = videolibrary.vid
+    # group by videolibrary.vid"""
+    sql_vid_avg_time_watched = """select videolibrary.vid, avg(userinteractions.amount_of_time_watched) as vid_avg_time_watched
     from userinteractions, videolibrary
     where userinteractions.vid = videolibrary.vid
     group by videolibrary.vid"""
 
-    sql_vid_avg_interaction_span = """select avg(userinteractions.date_watched - videolibrary.release_date) as vid_avg_interaction_span_days, userinteractions.vid 
+    sql_vid_avg_interaction_span = """select avg(date_watched - release_date) as vid_avg_interaction_span_days, userinteractions.vid 
     from userinteractions, videolibrary, userinfo 
     where userinteractions.vid = videolibrary.vid
     group by userinteractions.vid"""
