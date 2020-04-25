@@ -15,10 +15,6 @@ def hello_world(request):
         settings = q['settings']
         data = q['data']
 
-        # running ai algorithm
-        dataBack = aimodel(userid, settings, featureSettings, data)
-        print(dataBack)
-
     except Exception as e:
         return HttpResponseBadRequest(
             json.dumps({
@@ -26,6 +22,9 @@ def hello_world(request):
             }),
             content_type="application/json"
         )
+
+    # running ai algorithm
+    dataBack = aimodel(userid, settings, featureSettings, data)
 
     # return response to frontend
     response = JsonResponse({
