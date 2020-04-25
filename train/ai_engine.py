@@ -89,8 +89,8 @@ def aimodel(uid, settings, featureSettings, data):
         if settings['nUserF1Scores'] is True:
             return(checkAccuracy(X, y, int(settings['numKFolds']), 'logreg'))
         else:
-            outputDict = {'f1score': 0, 'tp': 0,
-                          'fp': 0, 'tn': 0, 'fn': 0, 'nusers': 1}
+            outputDict = {'f1score': 0, 'true_positive': 0,
+                          'false_positive': 0, 'true_negative': 0, 'false_negative': 0, 'nusers': 1}
             if settings['checkF1Scores'] is True:
                 outputDict = checkAccuracy(
                     X, y, int(settings['numKFolds']), 'logreg')
@@ -121,8 +121,8 @@ def aimodel(uid, settings, featureSettings, data):
         if settings['nUserF1Scores'] is True:
             return(checkAccuracy(X, y, int(settings['numKFolds']), 'knn'))
         else:
-            outputDict = {'f1score': 0, 'tp': 0,
-                          'fp': 0, 'tn': 0, 'fn': 0, 'nusers': 1}
+            outputDict = {'f1score': 0, 'true_positive': 0,
+                          'false_positive': 0, 'true_negative': 0, 'false_negative': 0, 'nusers': 1}
             if settings['checkF1Scores'] is True:
                 outputDict = checkAccuracy(
                     X, y, int(settings['numKFolds']), 'knn')
@@ -156,8 +156,8 @@ def aimodel(uid, settings, featureSettings, data):
         if settings['nUserF1Scores'] is True:
             return(checkAccuracy(X, y, int(settings['numKFolds']), 'multilogreg'))
         else:
-            outputDict = {'f1score': 0, 'tp': 0,
-                          'fp': 0, 'tn': 0, 'fn': 0, 'nusers': 1}
+            outputDict = {'f1score': 0, 'true_positive': 0,
+                          'false_positive': 0, 'true_negative': 0, 'false_negative': 0, 'nusers': 1}
             if settings['checkF1Scores'] is True:
                 outputDict = checkAccuracy(
                     X, y, int(settings['numKFolds']), 'multilogreg')
@@ -188,8 +188,8 @@ def aimodel(uid, settings, featureSettings, data):
         if settings['nUserF1Scores'] is True:
             return(checkAccuracy(X, y, int(settings['numKFolds']), 'mlp'))
         else:
-            outputDict = {'f1score': 0, 'tp': 0,
-                          'fp': 0, 'tn': 0, 'fn': 0, 'nusers': 1}
+            outputDict = {'f1score': 0, 'true_positive': 0,
+                          'false_positive': 0, 'true_negative': 0, 'false_negative': 0, 'nusers': 1}
             if settings['checkF1Scores'] is True:
                 outputDict = checkAccuracy(
                     X, y, int(settings['numKFolds']), 'mlp')
@@ -222,8 +222,8 @@ def aimodel(uid, settings, featureSettings, data):
         if settings['nUserF1Scores'] is True:
             return(checkAccuracy(X, y, int(settings['numKFolds']), 'mlp'))
         else:
-            outputDict = {'f1score': 0, 'tp': 0,
-                          'fp': 0, 'tn': 0, 'fn': 0, 'nusers': 1}
+            outputDict = {'f1score': 0, 'true_positive': 0,
+                          'false_positive': 0, 'true_negative': 0, 'false_negative': 0, 'nusers': 1}
             if settings['checkF1Scores'] is True:
                 outputDict = checkAccuracy(
                     X, y, int(settings['numKFolds']), 'xgboost')
@@ -340,7 +340,7 @@ def aimodel(uid, settings, featureSettings, data):
                 fp = round(final_conf_matrix[0][1]/sample_size, 2)
                 tn = round(final_conf_matrix[1][1]/sample_size, 2)
                 fn = round(final_conf_matrix[1][0]/sample_size, 2)
-                return({'f1score': f1score, 'tp': tp, 'fp': fp, 'tn': tn, 'fn': fn, 'nusers': 1})
+                return({'f1score': f1score, 'true_positive': tp, 'false_positive': fp, 'true_negative': tn, 'false_negative': fn, 'nusers': 1})
 
         else:
             avg_f1_scores = sum(f1_scores)/len(f1_scores)
@@ -363,11 +363,11 @@ def aimodel(uid, settings, featureSettings, data):
                 fp = round(final_conf_matrix[0][1]/sample_size, 2)
                 tn = round(final_conf_matrix[1][1]/sample_size, 2)
                 fn = round(final_conf_matrix[1][0]/sample_size, 2)
-                return({'f1score': f1score, 'tp': tp, 'fp': fp, 'tn': tn, 'fn': fn})
+                return({'f1score': f1score, 'true_positive': tp, 'false_positive': fp, 'true_negative': tn, 'false_negative': fn})
 
     if settings['nUserF1Scores'] and len(data) == 0:
-        output = {'f1score': 0, 'tp': 0, 'fp': 0,
-                  'tn': 0, 'fn': 0, 'nusers': 0, 'data': []}
+        output = {'f1score': 0, 'true_positive': 0, 'false_positive': 0,
+                  'true_negative': 0, 'false_negative': 0, 'nusers': 0, 'data': []}
 
         url = os.environ['DATABASE_URL']
         engine = create_engine(url)
@@ -544,16 +544,16 @@ def aimodel(uid, settings, featureSettings, data):
         tn = round(tn/n_Users, 2)
         fn = round(fn/n_Users, 2)
         output['f1score'] = f1score
-        output['tp'] = tp
-        output['fp'] = fp
-        output['tn'] = tn
-        output['fn'] = fn
+        output['true_positive'] = tp
+        output['false_positive'] = fp
+        output['true_negative'] = tn
+        output['false_negative'] = fn
         output['nusers'] = n_Users
         return(output)
 
     else:
-        output = {'f1score': 0, 'tp': 0, 'fp': 0,
-                  'tn': 0, 'fn': 0, 'nusers': 1, 'data': []}
+        output = {'f1score': 0, 'true_positive': 0, 'false_positive': 0,
+                  'true_negative': 0, 'false_negative': 0, 'nusers': 1, 'data': []}
         userIDs = None
         user_time_watched_ratio = None
         categories = None
