@@ -335,28 +335,7 @@ def aimodel(uid, settings, featureSettings, data):
                 final_conf_matrix = metrics.confusion_matrix(
                     y.values, vid_predictions)
                 sample_size = sum([sum(i) for i in final_conf_matrix])
-                # print(
-                #     '_______________________________________________________________________________')
-                # print('Model: {model}'.format(model=settings['modelType']))
-                # print(
-                #     'The F1 score is a value between 0 and 1. The closer to 1, the better the score.')
-                # print(
-                #     'The F1 score represents a balanced view between model precision and recall.')
-                # print('F1 score: '+str(round(metrics.f1_score(y.values,
-                #                                               vid_predictions, average='weighted'), 4)))
-                # print()
-                # print(
-                #     'Normalized confusion matrix results below. Values are between 0 and 1.\n')
-                # print('True Positive: '+str(round(
-                #     final_conf_matrix[0][0]/sample_size, 2))+' (model is correct when it says you like video)')
-                # print('False Positive (model error): '+str(round(
-                #     final_conf_matrix[0][1]/sample_size, 2))+' (model says you like a video when you don\'t)')
-                # print('True Negative: '+str(round(
-                #     final_conf_matrix[1][1]/sample_size, 2))+' (model is correct when it says you don\'t like video)')
-                # print('False Negative (model error): '+str(round(
-                #     final_conf_matrix[1][0]/sample_size, 2))+' (model says you don\'t like video when you do)')
-                # print(
-                #     '_______________________________________________________________________________')
+
                 f1score = round(metrics.f1_score(
                     y.values, vid_predictions, average='weighted'), 4)
                 tp = round(final_conf_matrix[0][0]/sample_size, 2)
@@ -381,27 +360,6 @@ def aimodel(uid, settings, featureSettings, data):
             if settings['nUserF1Scores'] is True:
                 return(avg_f1_scores, final_conf_matrix[0][0]/sample_size, final_conf_matrix[0][1]/sample_size, final_conf_matrix[1][1]/sample_size, final_conf_matrix[1][0]/sample_size)
             else:
-                # print(
-                #     '_______________________________________________________________________________')
-                # print('Model: {model}'.format(model=settings['modelType']))
-                # print(
-                #     'The F1 score is a value between 0 and 1. The closer to 1, the better the score.')
-                # print(
-                #     'The F1 score represents a balanced view between model precision and recall.')
-                # print('Average F1 score: '+str(round(avg_f1_scores, 4)))
-                # print()
-                # print(
-                #     'Normalized confusion matrix results below. Values are between 0 and 1.\n')
-                # print('True Positive: '+str(round(
-                #     final_conf_matrix[0][0]/sample_size, 2))+' (model is correct when it says you like video)')
-                # print('False Positive (model error): '+str(round(
-                #     final_conf_matrix[0][1]/sample_size, 2))+' (model says you like a video when you don\'t)')
-                # print('True Negative: '+str(round(
-                #     final_conf_matrix[1][1]/sample_size, 2))+' (model is correct when it says you don\'t like video)')
-                # print('False Negative (model error): '+str(round(
-                #     final_conf_matrix[1][0]/sample_size, 2))+' (model says you don\'t like video when you do)')
-                # print(
-                #     '_______________________________________________________________________________')
                 f1score = round(avg_f1_scores, 4)
                 tp = round(final_conf_matrix[0][0]/sample_size, 2)
                 fp = round(final_conf_matrix[0][1]/sample_size, 2)
@@ -419,16 +377,8 @@ def aimodel(uid, settings, featureSettings, data):
         host = 'drona.db.elephantsql.com'
         port = '5432'
         database = 'dxxgpeye'
+
         url = os.environ['DATABASE_URL']
-        #conn = psycopg2.connect(url, sslmode='require')
-
-        # elephantSQL connection
-        #connection = psycopg2.connect("dbname='dxxgpeye' user='dxxgpeye' host='drona.db.elephantsql.com' password='LuMS6WYy5EDkUs85hXToB9GtWGF78NSM'")
-
-        # engine = create_engine("postgresql+psycopg2://{user}:{pw}@localhost/{db}"
-        #                        .format(user=dbusername,
-        #                                pw=password,
-        #                                db=database))
         engine = create_engine(url)
 
         userIDs = pd.read_sql_query(sql_uids, con=engine)
@@ -614,7 +564,6 @@ def aimodel(uid, settings, featureSettings, data):
         return(output)
 
     else:
-        print("here")
         output = {'f1score': 0, 'tp': 0, 'fp': 0,
                   'tn': 0, 'fn': 0, 'nusers': 1, 'data': []}
         userIDs = None
@@ -634,23 +583,9 @@ def aimodel(uid, settings, featureSettings, data):
             vid_avg_time_watched = pd.DataFrame.from_dict(data[4])
             vid_avg_interaction_span = pd.DataFrame.from_dict(data[5])
         else:
-            dbusername = 'dxxgpeye'
-            password = 'LuMS6WYy5EDkUs85hXToB9GtWGF78NSM'
-            host = 'drona.db.elephantsql.com'
-            port = '5432'
-            database = 'dxxgpeye'
-
             url = os.environ['DATABASE_URL']
-            #conn = psycopg2.connect(url, sslmode='require')
-
-            # elephantSQL connection
-            #connection = psycopg2.connect("dbname='dxxgpeye' user='dxxgpeye' host='drona.db.elephantsql.com' password='LuMS6WYy5EDkUs85hXToB9GtWGF78NSM'")
-
-            # engine = create_engine("postgresql+psycopg2://{user}:{pw}@localhost/{db}"
-            #                        .format(user=dbusername,
-            #                                pw=password,
-            #                                db=database))
             engine = create_engine(url)
+
             sql_user_time_watched = """select amount_of_time_watched, videolibrary.length, userinteractions.vid 
             from userinteractions, videolibrary, userinfo 
             where userinteractions.vid = videolibrary.vid and userinfo.uid = userinteractions.uid
