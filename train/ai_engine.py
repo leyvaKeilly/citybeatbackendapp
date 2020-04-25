@@ -372,20 +372,13 @@ def aimodel(uid, settings, featureSettings, data):
     if settings['nUserF1Scores'] and len(data) == 0:
         output = {'f1score': 0, 'tp': 0, 'fp': 0,
                   'tn': 0, 'fn': 0, 'nusers': 0, 'data': []}
-        userIDs = None
-        engine = None
-        dbusername = 'dxxgpeye'
-        password = 'LuMS6WYy5EDkUs85hXToB9GtWGF78NSM'
-        host = 'drona.db.elephantsql.com'
-        port = '5432'
-        database = 'dxxgpeye'
 
         url = os.environ['DATABASE_URL']
         engine = create_engine(url)
 
         userIDs = pd.read_sql_query(sql_uids, con=engine)
 
-        n_Users = int(userIDs.shape[0]*settings['nUserFraction'])
+        n_Users = int(userIDs.shape[0]*float(settings['nUserFraction']))
         if n_Users == 0:
             n_Users = 1
 
@@ -400,7 +393,7 @@ def aimodel(uid, settings, featureSettings, data):
             sql_user_time_watched = """select amount_of_time_watched, videolibrary.length, userinteractions.vid 
             from userinteractions, videolibrary, userinfo 
             where userinteractions.vid = videolibrary.vid and userinfo.uid = userinteractions.uid
-            and userinfo.uid = '{uid}'""".format(uid=uid)
+            and userinfo.uid = '{uid}'""".format(uid=user)
 
             user_time_watched_ratio = pd.read_sql_query(
                 sql_user_time_watched, con=engine)
