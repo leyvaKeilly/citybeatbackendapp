@@ -91,13 +91,13 @@ def aimodel(uid, settings, featureSettings, data):
         X = ttuserint[features]
 
         if settings['nUserF1Scores'] is True:
-            return(checkAccuracy(X, y, settings['numKFolds'], 'logreg'))
+            return(checkAccuracy(X, y, int(settings['numKFolds']), 'logreg'))
         else:
             outputDict = {'f1score': 0, 'tp': 0,
                           'fp': 0, 'tn': 0, 'fn': 0, 'nusers': 1}
             if settings['checkF1Scores'] is True:
                 outputDict = checkAccuracy(
-                    X, y, settings['numKFolds'], 'logreg')
+                    X, y, int(settings['numKFolds']), 'logreg')
 
             model = LogisticRegression(solver='liblinear').fit(X, y)
             vids = np.array(vidfeatures['vid'])
@@ -123,12 +123,13 @@ def aimodel(uid, settings, featureSettings, data):
         X = ttuserint[features]
 
         if settings['nUserF1Scores'] is True:
-            return(checkAccuracy(X, y, settings['numKFolds'], 'knn'))
+            return(checkAccuracy(X, y, int(settings['numKFolds']), 'knn'))
         else:
             outputDict = {'f1score': 0, 'tp': 0,
                           'fp': 0, 'tn': 0, 'fn': 0, 'nusers': 1}
             if settings['checkF1Scores'] is True:
-                outputDict = checkAccuracy(X, y, settings['numKFolds'], 'knn')
+                outputDict = checkAccuracy(
+                    X, y, int(settings['numKFolds']), 'knn')
 
             model = KNeighborsClassifier(
                 n_neighbors=3, weights='uniform', metric='minkowski').fit(X, y)
@@ -157,13 +158,13 @@ def aimodel(uid, settings, featureSettings, data):
         X = ttuserint[features]
 
         if settings['nUserF1Scores'] is True:
-            return(checkAccuracy(X, y, settings['numKFolds'], 'multilogreg'))
+            return(checkAccuracy(X, y, int(settings['numKFolds']), 'multilogreg'))
         else:
             outputDict = {'f1score': 0, 'tp': 0,
                           'fp': 0, 'tn': 0, 'fn': 0, 'nusers': 1}
             if settings['checkF1Scores'] is True:
                 outputDict = checkAccuracy(
-                    X, y, settings['numKFolds'], 'multilogreg')
+                    X, y, int(settings['numKFolds']), 'multilogreg')
 
             model = LogisticRegression(
                 solver='liblinear', multi_class='auto').fit(X, y)
@@ -189,12 +190,13 @@ def aimodel(uid, settings, featureSettings, data):
         X = ttuserint[features]
 
         if settings['nUserF1Scores'] is True:
-            return(checkAccuracy(X, y, settings['numKFolds'], 'mlp'))
+            return(checkAccuracy(X, y, int(settings['numKFolds']), 'mlp'))
         else:
             outputDict = {'f1score': 0, 'tp': 0,
                           'fp': 0, 'tn': 0, 'fn': 0, 'nusers': 1}
             if settings['checkF1Scores'] is True:
-                outputDict = checkAccuracy(X, y, settings['numKFolds'], 'mlp')
+                outputDict = checkAccuracy(
+                    X, y, int(settings['numKFolds']), 'mlp')
 
             model = MLPClassifier(
                 solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1).fit(X, y)
@@ -222,13 +224,13 @@ def aimodel(uid, settings, featureSettings, data):
         data
 
         if settings['nUserF1Scores'] is True:
-            return(checkAccuracy(X, y, settings['numKFolds'], 'mlp'))
+            return(checkAccuracy(X, y, int(settings['numKFolds']), 'mlp'))
         else:
             outputDict = {'f1score': 0, 'tp': 0,
                           'fp': 0, 'tn': 0, 'fn': 0, 'nusers': 1}
             if settings['checkF1Scores'] is True:
                 outputDict = checkAccuracy(
-                    X, y, settings['numKFolds'], 'xgboost')
+                    X, y, int(settings['numKFolds']), 'xgboost')
 
             model = xgb.XGBClassifier(
                 learning_rate=0.1,
