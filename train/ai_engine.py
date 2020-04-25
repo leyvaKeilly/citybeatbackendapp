@@ -36,10 +36,6 @@ def aimodel(uid, settings, featureSettings, data):
     and userinteractions.vid_selected = true
     group by videolibrary.vid"""
 
-    # sql_vid_avg_time_watched = """select videolibrary.vid,videolibrary.length, avg(userinteractions.amount_of_time_watched) as vid_avg_time_watched
-    # from userinteractions, videolibrary
-    # where userinteractions.vid = videolibrary.vid
-    # group by videolibrary.vid"""
     sql_vid_avg_time_watched = """select videolibrary.vid, avg(userinteractions.amount_of_time_watched) as vid_avg_time_watched
     from userinteractions, videolibrary
     where userinteractions.vid = videolibrary.vid
@@ -443,9 +439,6 @@ def aimodel(uid, settings, featureSettings, data):
             vid_view_info = vid_view_info.fillna(value=0)
             vid_view_info['vid_user_selected_watch_ratio'] = np.where(
                 vid_view_info['num_distinct_views'] > 0, vid_view_info['num_selected']/vid_view_info['num_distinct_views'], 0)
-
-            # vid_avg_interaction_span['vid_avg_interaction_span_days'] = vid_avg_interaction_span['vid_avg_interaction_span_days'].apply(
-            #    stripdays)
 
             # merges the tables together by vid to form one large table, vidfeatures
             # vidfeatures is a table of the entire videolibrary with the previously calculated columns
