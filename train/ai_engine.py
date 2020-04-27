@@ -377,7 +377,7 @@ def aimodel(uid, settings, featureSettings, data):
     if settings['nUserF1Scores'] and len(data) == 0:
         output = {'f1score': 0, 'true_positive': 0, 'false_positive': 0,
                   'true_negative': 0, 'false_negative': 0, 'nusers': 0, 'data': []}
-
+        # connecting with heroku database using the environment variable DATABASE_URL
         url = os.environ['DATABASE_URL']
         engine = create_engine(url)
 
@@ -585,6 +585,7 @@ def aimodel(uid, settings, featureSettings, data):
 
         else:
             # F1Scores using data from the database
+            # connecting with heroku database using the environment variable DATABASE_URL
             url = os.environ['DATABASE_URL']
             engine = create_engine(url)
 
