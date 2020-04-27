@@ -13,10 +13,13 @@ from sklearn import metrics
 import json
 import os
 
+# aimodel function takes as parameters the settings, featureSettings, data and user id(uid) if specified on the frontend.
+
 
 def aimodel(uid, settings, featureSettings, data):
     warnings.filterwarnings('ignore')
 
+    # string variables that hold the queries to be performed on the database if the data sent from the frontend is null
     sql_uids = """select uid from userinfo"""
 
     sql_categories = """select vid,title,primary_category,sub_category,sub_sub_category, length
@@ -47,7 +50,6 @@ def aimodel(uid, settings, featureSettings, data):
     group by userinteractions.vid"""
 
     # function to be used on columns to strip whitespace
-
     def rstrip(string):
         if string is None:
             return(None)
@@ -79,7 +81,9 @@ def aimodel(uid, settings, featureSettings, data):
         else:
             return 3
 
-    # return list of probabilities that this user will want to watch that corresponding video
+    # the following functions return list of probabilities that this user will want to watch that corresponding video
+
+    # logistic regression model
     def runLogisticRegression(ttuserint, vidfeatures, settings=settings):
         # ttuserint = ttuserint.drop('if_watched_multi',axis=1)
         y = ttuserint['if_watched']
@@ -111,6 +115,7 @@ def aimodel(uid, settings, featureSettings, data):
                     zip(vids_prob.tolist(), vids.tolist()), reverse=True)
                 return(outputDict)
 
+    # knn model
     def runKNN(ttuserint, vidfeatures, settings=settings):
 
         # ttuserint = ttuserint.drop('if_watched_multi',axis=1)
@@ -144,6 +149,7 @@ def aimodel(uid, settings, featureSettings, data):
                     zip(vids_prob.tolist(), vids.tolist()), reverse=True)
                 return(outputDict)
 
+    # multilogistic regression model
     # likely not the algorithm to use due to binary nature of initial question
     def runMultiLogisticRegression(ttuserint, vidfeatures, settings=settings):
 
@@ -179,6 +185,7 @@ def aimodel(uid, settings, featureSettings, data):
                     zip(vids_prob.tolist(), vids.tolist()), reverse=True)
                 return(outputDict)
 
+    # MLP
     def runMLP(ttuserint, vidfeatures, settings=settings):
 
         y = ttuserint['if_watched']
@@ -211,6 +218,7 @@ def aimodel(uid, settings, featureSettings, data):
                     zip(vids_prob.tolist(), vids.tolist()), reverse=True)
                 return(outputDict)
 
+    # xgboost model. Note: This model takes too long to run on the website
     def runXGBoost(ttuserint, vidfeatures, settings=settings):
 
         # ttuserint = ttuserint.drop('if_watched_multi',axis=1)
@@ -365,6 +373,7 @@ def aimodel(uid, settings, featureSettings, data):
                 fn = round(final_conf_matrix[1][0]/sample_size, 2)
                 return({'f1score': f1score, 'true_positive': tp, 'false_positive': fp, 'true_negative': tn, 'false_negative': fn})
 
+    # Calculating nUserF1Scores with data from database
     if settings['nUserF1Scores'] and len(data) == 0:
         output = {'f1score': 0, 'true_positive': 0, 'false_positive': 0,
                   'true_negative': 0, 'false_negative': 0, 'nusers': 0, 'data': []}
@@ -427,7 +436,6 @@ def aimodel(uid, settings, featureSettings, data):
                 rstrip)
 
             # table of videos with the ratio of number of unique views to total number of users
-
             vid_num_views['vid_user_watched_ratio'] = vid_num_views['num_distinct_views']/num_users
 
             # table of videos with the count of how many times it has been selected, used later for other table calculations
@@ -446,6 +454,7 @@ def aimodel(uid, settings, featureSettings, data):
                 categories, vid_view_info, how='outer', on='vid')
             vidfeatures = pd.merge(
                 vidfeatures, vid_avg_time_watched, how='outer', on='vid')
+
             # table of the average amount of time in seconds that the video has been watched
             vidfeatures['vid_avg_time_watched_ratio'] = vidfeatures['vid_avg_time_watched'] / \
                 vidfeatures['length']
@@ -527,6 +536,7 @@ def aimodel(uid, settings, featureSettings, data):
                 fn += tmpfn
             else:
                 print('Invalid model type selection.')
+        # use to run algorithm on console
         # print('Running model {model} on {n_Users} users:'.format(
         #     model=settings['modelType'], n_Users=n_Users))
         # print('F1 Score: {f1score}'.format(f1score=round(f1score/n_Users, 2)))
@@ -551,6 +561,7 @@ def aimodel(uid, settings, featureSettings, data):
         output['nusers'] = n_Users
         return(output)
 
+    # Calculating F1Score for a specific user
     else:
         output = {'f1score': 0, 'true_positive': 0, 'false_positive': 0,
                   'true_negative': 0, 'false_negative': 0, 'nusers': 1, 'data': []}
@@ -562,6 +573,7 @@ def aimodel(uid, settings, featureSettings, data):
         vid_avg_time_watched = None
         vid_avg_interaction_span = None
 
+        # F1Scores using data sent from the frontend (data length greater than zero)
         if len(data) > 0:
             userIDs = pd.DataFrame(data[0], columns=['uid'])
             user_time_watched_ratio = pd.DataFrame.from_dict(data[6])
@@ -570,7 +582,9 @@ def aimodel(uid, settings, featureSettings, data):
             vid_num_selected = pd.DataFrame.from_dict(data[3])
             vid_avg_time_watched = pd.DataFrame.from_dict(data[4])
             vid_avg_interaction_span = pd.DataFrame.from_dict(data[5])
+
         else:
+            # F1Scores using data from the database
             url = os.environ['DATABASE_URL']
             engine = create_engine(url)
 
@@ -627,12 +641,14 @@ def aimodel(uid, settings, featureSettings, data):
         vidfeatures = pd.merge(
             categories, vid_view_info, how='outer', on='vid')
         if len(data) > 0:
+            # using data sent from the frontend (data length greater than zero)
             # table of the average amount of time in seconds that the video has been watched
             vid_avg_time_watched['vid_avg_time_watched_ratio'] = vid_avg_time_watched['vid_avg_time_watched'] / \
                 vid_avg_time_watched['length']
             vidfeatures = pd.merge(
                 vidfeatures, vid_avg_time_watched, how='outer', on='vid')
         else:
+            # using data from the database
             vidfeatures = pd.merge(
                 vidfeatures, vid_avg_time_watched, how='outer', on='vid')
             vidfeatures['vid_avg_time_watched_ratio'] = vidfeatures['vid_avg_time_watched'] / \

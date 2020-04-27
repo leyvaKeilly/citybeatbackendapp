@@ -15,6 +15,7 @@ def hello_world(request):
         settings = q['settings']
         data = q['data']
 
+    # if bad request, sent error to frontend
     except Exception as e:
         return HttpResponseBadRequest(
             json.dumps({
@@ -23,7 +24,7 @@ def hello_world(request):
             content_type="application/json"
         )
 
-    # running ai algorithm
+    # running ai algorithm with the data passed from the frontend
     dataBack = aimodel(userid, settings, featureSettings, data)
 
     # return response to frontend
