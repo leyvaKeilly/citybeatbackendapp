@@ -6,7 +6,7 @@ from .ai_engine import aimodel
 
 
 @csrf_exempt
-def hello_world(request):
+def trainModel(request):
     try:
         # getting data from request
         q = json.loads(request.body.decode('utf-8'))
