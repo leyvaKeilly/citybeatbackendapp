@@ -1,5 +1,11 @@
 # comp523citybeatbackend
 
+Welcome to our project for City News Beat!
+
+We are a team of four seniors that created an A.I. engine as part of our project for the Software Engineering class at the University of North Carolina - Chapel Hill. Our algorithm reads data of users interactions with City News Beat app and tries to recommend videos based on the user's interests. Our goal is to deliver to each user a Newscast-for-1 based on their preferences.
+
+We created a website to demo how our algorithm to recommend videos works.
+
 To open website demo: https://city-news-beat.herokuapp.com/
 
 To clone the git repo and deploy your own heroku app follow these instructions:
@@ -68,12 +74,15 @@ To save changes made to the heroku app in terminal on VS Code:
 - git push heroku master
 
 To run locally:
+- Install python (version >= 3)
 - Install Django
 - Open project folder on terminal
 - Write: python manage.py runserver
 - Open on browser: localhost:8000
 
 Note: IMPORTANT
+
+If you haven't cloned the frontend part of this demo, go to https://github.com/523TeamD/CityNewsBeatAIDemoAPP.git and follow the README instructions.
 
 To communicate your new frontend app with the backend app on heroku:
 
@@ -91,4 +100,4 @@ On frontend:
 
 
 
-- For more help: https://devcenter.heroku.com/articles/
+- For more help on Heroku: https://devcenter.heroku.com/articles/
