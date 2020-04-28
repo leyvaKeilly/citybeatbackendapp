@@ -31,8 +31,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['citybeatapp.herokuapp.com',
                  'localhost:3000',
                  'city-news-beat.herokuapp.com',
-                 'estaappeselbackend.herokuapp.com',
-                 'estaappesparaprobar.herokuapp.com',
                  ]
 
 
