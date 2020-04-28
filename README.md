@@ -64,7 +64,7 @@ Write on the VS Code terminal:
 
 Go to heroku
 - Select the app you just created
-- Click on Open app on the top right corner
+- Click on "Open app" on the top right corner
 
 To save changes made to the heroku app in terminal on VS Code:
 - git add .
@@ -92,10 +92,22 @@ On backend:
 
 On frontend:
 
-- On VS Code open CityNewsBeatAIDemoAPP folder
-- Open terminal
-- On Scripts, open the workSpace.js file and set the herokuUrl variable to the url of your new frontend app.
+- To keep using our demo backend and database on CityNewsBeatAIDemoAPP, scripts folder, open the workSpace.js file and set the herokuUrl variable to https://citybeatapp.herokuapp.com/
 
+- To set your own backend and database on CityNewsBeatAIDemoAPP, scripts folder, open the workSpace.js file and set the herokuUrl variable to the url of your new backend app.
+
+Note: If you want to run your own backend, you need to set up the database on Heroku.
+
+Overview to set up database:
+
+- Go to Heroku, open your backend app.
+- Go to Resources, and click on Heroku Postgres.
+- On the menu, next to Durability, click on Settings, then click on View Credentials. We will use these credentials to create and manage a Postgres database using pgAdmin4.
+- Open pgAdmin4. (Download here: https://www.pgadmin.org/download/)
+- Create a new server with the Heroku postgres database credentials. Now, the Heroku postgres database can be manage from pgAdmin.
+- On pgAdmin4 create the tables (follow the instructions on Documentation for the column names and datatypes: https://teamd.web.unc.edu/files/2020/04/TeamD_Documentation-3.pdf)
+- Import a csv file with the data collected, or use a backup file to populate the tables.
+- If you want to modify our ai_engine: Go to the backend app, open train folder, and open ai_engine.py. To understand how ai_engine.py is working, please refer to the Documentation: https://teamd.web.unc.edu/files/2020/04/TeamD_Documentation-3.pdf  
 
 
 - For more help on Heroku: https://devcenter.heroku.com/articles/
