@@ -35,7 +35,7 @@ https://git-scm.com/downloads
 
 After you cloned the github repo
 - Open the folder that you just cloned (if it's not already opened). For this go to File/Open folder/ and search for the location of the folder on your computer. 
-- Go to Termianl/Open new terminal or right click on comp523citybeatbackend folder and select open a new terminal.
+- Go to Termianl/Open new terminal or right click on citybeatbackendapp folder and select open a new terminal.
 
 Note: you should see on the terminal the path to the cloned folder Ex: C:\Users\UserName\Desktop\citybeatbackendapp
 
